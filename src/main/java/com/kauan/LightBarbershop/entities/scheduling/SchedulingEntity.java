@@ -43,9 +43,9 @@ public class SchedulingEntity {
     @JoinColumn(name = "client_id", referencedColumnName = "id")
     private ClientEntity client;
 
-    @Column(name = "date", nullable = false)
-    private LocalDate date;
+    @Column(name = "appointment_date", nullable = false)
+    private LocalDate appointmentDate;
 
-    @Column(name = "time", nullable = false)
-    private LocalTime time;
+    @Column(name = "appointment_time", nullable = false)
+    private LocalTime appointmentTime;
 }
