@@ -9,12 +9,12 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.FetchType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.NoArgsConstructor;
 import lombok.EqualsAndHashCode;
-
 import java.util.Set;
 import java.util.UUID;
 
@@ -46,4 +46,7 @@ public class BarberEntity {
 
     @OneToMany(mappedBy = "barber", cascade = CascadeType.ALL)
     private Set<SchedulingEntity> schedulings;
+
+    @OneToMany(mappedBy = "barber", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<WorkingHoursEntity> workingHours;
 }
