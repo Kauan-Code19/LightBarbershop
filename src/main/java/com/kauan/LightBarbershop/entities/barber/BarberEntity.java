@@ -1,16 +1,21 @@
 package com.kauan.LightBarbershop.entities.barber;
 
+import com.kauan.LightBarbershop.entities.scheduling.SchedulingEntity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.GenerationType;
+import jakarta.persistence.CascadeType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.NoArgsConstructor;
 import lombok.EqualsAndHashCode;
+
+import java.util.Set;
 import java.util.UUID;
 
 @NoArgsConstructor
@@ -38,4 +43,7 @@ public class BarberEntity {
 
     @Column(name = "telephone", nullable = false)
     private String telephone;
+
+    @OneToMany(mappedBy = "barber", cascade = CascadeType.ALL)
+    private Set<SchedulingEntity> schedulings;
 }
