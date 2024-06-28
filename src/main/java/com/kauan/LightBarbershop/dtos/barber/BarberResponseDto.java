@@ -16,15 +16,12 @@ public class BarberResponseDto {
 
     private String email;
 
-    private String password;
-
     private String telephone;
 
     public BarberResponseDto(BarberEntity barber) {
         id = barber.getId();
         name = barber.getName();
         email = barber.getEmail();
-        password = barber.getPassword();
         telephone = barber.getTelephone();
     }
 }
