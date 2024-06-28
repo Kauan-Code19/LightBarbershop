@@ -9,7 +9,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.Optional;
 
 @Service
@@ -24,7 +23,7 @@ public class BarberService {
 
     @Transactional(readOnly = true)
     public boolean barberExist(String email) {
-        Optional<UserDetails> barber = Optional.ofNullable(barberRepository.findByEmail(email));
+        Optional<UserDetails> barber = Optional.ofNullable(barberRepository.findByEmailWithSchedulingsAndWorkingHours(email));
 
         return barber.isPresent();
     }
