@@ -6,28 +6,30 @@ import com.kauan.LightBarbershop.services.barber.BarberService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
-import java.net.URI;
+import org.springframework.web.bind.annotation.RequestBody;
+import java.util.UUID;
 
 @RestController
 @RequestMapping(value = "/barber")
 public class BarberController {
 
+    private final BarberService barberService;
+
     @Autowired
-    private BarberService barberService;
+    public BarberController(BarberService barberService) {
+        this.barberService = barberService;
+    }
 
-    @PostMapping
-    public ResponseEntity<BarberResponseDto> createBarber(@Valid @RequestBody BarberDto barberDto) {
-        BarberResponseDto barberResponseDto = barberService.createBarber(barberDto);
+    @PutMapping("/{uuid}")
+    public ResponseEntity<BarberResponseDto> updateBarber(@PathVariable UUID uuid,
+                                                          @Valid @RequestBody BarberDto barberDto) {
+        // Atualizar barber e receber barberResponseDto
+        BarberResponseDto barberResponseDto = barberService.updateBarber(uuid, barberDto);
 
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("{/id}")
-                .buildAndExpand(barberResponseDto.getId()).toUri();
-
-        return ResponseEntity.created(uri).body(barberResponseDto);
+        return ResponseEntity.ok(barberResponseDto);
     }
 }

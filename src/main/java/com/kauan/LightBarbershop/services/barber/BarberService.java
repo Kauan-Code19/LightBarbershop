@@ -9,7 +9,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @Service
 public class BarberService {
@@ -21,9 +24,11 @@ public class BarberService {
         this.barberRepository = barberRepository;
     }
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true) // Transação apenas no modo leitura
     public boolean barberExist(String email) {
-        Optional<UserDetails> barber = Optional.ofNullable(barberRepository.findByEmailWithSchedulingsAndWorkingHours(email));
+        // Verifica e retorna true se um barber com o parâmetro "email" existe no banco de dados
+        Optional<UserDetails> barber = Optional.ofNullable(barberRepository
+                .findByEmailWithSchedulingsAndWorkingHours(email));
 
         return barber.isPresent();
     }
@@ -32,17 +37,66 @@ public class BarberService {
     public BarberResponseDto createBarber(BarberDto barberDto) {
         BarberEntity barber = new BarberEntity();
 
+        // Definindo os atributos da entidade com barberDto
         barber.setName(barberDto.getName());
         barber.setEmail(barberDto.getEmail());
 
         String encryptedPassword = new Argon2PasswordEncoder(16, 32, 2, 65536, 2)
-                .encode(barberDto.getPassword());
+                .encode(barberDto.getPassword()); // Encriptografia da senha do barber
 
         barber.setPassword(encryptedPassword);
         barber.setTelephone(barberDto.getTelephone());
 
-        barberRepository.save(barber);
+        barberRepository.save(barber); // Salvando entidade no banco de dados
 
         return new BarberResponseDto(barber);
+    }
+
+    @Transactional
+    public BarberResponseDto updateBarber(UUID uuid, BarberDto barberDto) {
+        BarberEntity barber = barberRepository.getReferenceById(uuid); // Buscando barber através do id
+
+        // Flag para rastrear se houve alguma atualização
+        AtomicBoolean updated = new AtomicBoolean(false);
+
+        updateAttribute(barberDto.getName(), barber.getName(), updated, ()
+                -> barber.setName(barberDto.getName())); // Atualiza o atributo 'name' se necessário
+
+        updateAttribute(barberDto.getEmail(), barber.getEmail(), updated, ()
+                -> barber.setEmail(barberDto.getEmail())); // Atualiza o atributo 'email' se necessário
+
+        updateAttribute(barberDto.getTelephone(), barber.getTelephone(), updated, ()
+                -> barber.setTelephone(barberDto.getTelephone()));// Atualiza o atributo 'telephone' se necessário
+
+        updatePassword(barberDto.getPassword(), barber, updated); // Atualiza a senha se necessário
+
+        if (updated.get()) {
+            barberRepository.save(barber); // Salva a entidade apenas se houve alguma atualização
+        }
+
+        return new BarberResponseDto(barber);
+    }
+
+    // Método para verificar e atualizar atributos genéricos
+    private void updateAttribute(Object newValue, Object currentValue,
+                                 AtomicBoolean updated, Runnable updateAction) {
+        if (!Objects.equals(newValue, currentValue)) {
+            updateAction.run(); // Executa a ação de atualização (lambda)
+            updated.set(true); // Marca que houve uma atualização
+        }
+    }
+
+    // Método para verificar e atualizar a senha
+    private void updatePassword(String newPassword, BarberEntity barber, AtomicBoolean updated) {
+        if (newPassword != null && !new Argon2PasswordEncoder(16, 32, 2, 65536, 2)
+                .matches(newPassword, barber.getPassword())) {
+
+            // Encripta a nova senha
+            String encryptedPassword = new Argon2PasswordEncoder(16, 32, 2, 65536, 2).encode(newPassword);
+
+            barber.setPassword(encryptedPassword); // Define a senha encriptada na entidade 'barber'
+
+            updated.set(true); // Marca que houve uma atualização
+        }
     }
 }
