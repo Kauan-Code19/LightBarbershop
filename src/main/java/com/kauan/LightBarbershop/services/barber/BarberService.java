@@ -99,4 +99,11 @@ public class BarberService {
             updated.set(true); // Marca que houve uma atualização
         }
     }
+
+    @Transactional(readOnly = true) // Transação apenas no modo leitura
+    public BarberResponseDto getBarber(UUID uuid) {
+        BarberEntity barber = barberRepository.getReferenceById(uuid); // Buscando barber através do id
+
+        return new BarberResponseDto(barber);
+    }
 }

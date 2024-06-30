@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -31,5 +32,12 @@ public class BarberController {
         BarberResponseDto barberResponseDto = barberService.updateBarber(uuid, barberDto);
 
         return ResponseEntity.ok(barberResponseDto);
+    }
+
+    @GetMapping("/{uuid}")
+    public ResponseEntity<BarberResponseDto> getBarber(@PathVariable UUID uuid) {
+        BarberResponseDto barberResponseDto = barberService.getBarber(uuid);
+
+        return ResponseEntity.ok().body(barberResponseDto);
     }
 }
