@@ -1,6 +1,7 @@
 package com.kauan.LightBarbershop.services.barber;
 
 import com.kauan.LightBarbershop.dtos.barber.BarberDto;
+import com.kauan.LightBarbershop.dtos.barber.BarberPasswordResponseDto;
 import com.kauan.LightBarbershop.dtos.barber.BarberResponseDto;
 import com.kauan.LightBarbershop.entities.barber.BarberEntity;
 import com.kauan.LightBarbershop.repositories.barber.BarberRepository;
@@ -105,5 +106,12 @@ public class BarberService {
         BarberEntity barber = barberRepository.getReferenceById(uuid); // Buscando barber através do id
 
         return new BarberResponseDto(barber);
+    }
+
+    @Transactional(readOnly = true) // Transação apenas no modo leitura
+    public BarberPasswordResponseDto getPasswordBarber(UUID uuid) {
+        BarberEntity barber = barberRepository.getReferenceById(uuid); // Buscando barber através do id
+
+        return new BarberPasswordResponseDto(barber.getPassword());
     }
 }

@@ -1,6 +1,7 @@
 package com.kauan.LightBarbershop.controllers.barber;
 
 import com.kauan.LightBarbershop.dtos.barber.BarberDto;
+import com.kauan.LightBarbershop.dtos.barber.BarberPasswordResponseDto;
 import com.kauan.LightBarbershop.dtos.barber.BarberResponseDto;
 import com.kauan.LightBarbershop.services.barber.BarberService;
 import jakarta.validation.Valid;
@@ -39,5 +40,12 @@ public class BarberController {
         BarberResponseDto barberResponseDto = barberService.getBarber(uuid);
 
         return ResponseEntity.ok().body(barberResponseDto);
+    }
+
+    @GetMapping("/{uuid}/get-password")
+    public ResponseEntity<BarberPasswordResponseDto> getPasswordBarber(@PathVariable UUID uuid) {
+        BarberPasswordResponseDto barberPasswordResponseDto = barberService.getPasswordBarber(uuid);
+
+        return ResponseEntity.ok().body(barberPasswordResponseDto);
     }
 }
