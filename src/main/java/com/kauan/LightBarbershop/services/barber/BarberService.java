@@ -114,4 +114,9 @@ public class BarberService {
 
         return new BarberPasswordResponseDto(barber.getPassword());
     }
+
+    @Transactional
+    public void deleteBarber(UUID uuid) {
+        barberRepository.deleteById(uuid); // Deletando barber através do id
+    }
 }
