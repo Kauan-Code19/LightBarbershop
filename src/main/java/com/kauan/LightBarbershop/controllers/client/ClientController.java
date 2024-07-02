@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,6 +31,13 @@ public class ClientController {
 
         // Atualizar client e receber barberResponseDto
         ClientResponseDto clientResponseDto = clientService.updateClient(uuid, clientDto);
+
+        return ResponseEntity.ok(clientResponseDto);
+    }
+
+    @GetMapping("/{uuid}")
+    public ResponseEntity<ClientResponseDto> getClient(@PathVariable UUID uuid) {
+        ClientResponseDto clientResponseDto = clientService.getClient(uuid);
 
         return ResponseEntity.ok(clientResponseDto);
     }

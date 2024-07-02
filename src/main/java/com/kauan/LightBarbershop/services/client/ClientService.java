@@ -79,8 +79,8 @@ public class ClientService {
                                  AtomicBoolean updatet, Runnable updateAction) {
 
         if (!Objects.equals(newValue, currentValue)) {
-            updateAction.run();
-            updatet.set(true);
+            updateAction.run();  // Executa a ação de atualização (lambda)
+            updatet.set(true); // Marca que houve uma atualização
         }
     }
 
@@ -92,9 +92,16 @@ public class ClientService {
             String encryptedPassword = new Argon2PasswordEncoder(16, 32, 2, 65536, 2)
                     .encode(newPassword);
 
-            client.setPassword(encryptedPassword);
+            client.setPassword(encryptedPassword); // Define a senha encriptada na entidade 'client'
 
-            updated.set(true);
+            updated.set(true); // Marca que houve uma atualização
         }
+    }
+
+    @Transactional(readOnly = true) // Transação apenas no modo leitura
+    public ClientResponseDto getClient(UUID uuid) {
+        ClientEntity client = clientRepository.getReferenceById(uuid); // Buscando barber através do id
+
+        return new ClientResponseDto(client);
     }
 }
