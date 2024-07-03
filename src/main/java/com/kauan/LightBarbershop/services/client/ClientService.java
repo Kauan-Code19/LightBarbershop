@@ -1,6 +1,7 @@
 package com.kauan.LightBarbershop.services.client;
 
 import com.kauan.LightBarbershop.dtos.client.ClientDto;
+import com.kauan.LightBarbershop.dtos.client.ClientPasswordResponseDto;
 import com.kauan.LightBarbershop.dtos.client.ClientResponseDto;
 import com.kauan.LightBarbershop.entities.client.ClientEntity;
 import com.kauan.LightBarbershop.entities.client.ClientLevelEnum;
@@ -103,5 +104,12 @@ public class ClientService {
         ClientEntity client = clientRepository.getReferenceById(uuid); // Buscando barber através do id
 
         return new ClientResponseDto(client);
+    }
+
+    @Transactional(readOnly = true) // Transação apenas no modo leitura
+    public ClientPasswordResponseDto getPasswordClient(UUID uuid) {
+        ClientEntity client = clientRepository.getReferenceById(uuid); // Buscando barber através do id
+
+        return new ClientPasswordResponseDto(client.getPassword());
     }
 }

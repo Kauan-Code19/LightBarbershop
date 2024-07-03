@@ -1,6 +1,7 @@
 package com.kauan.LightBarbershop.controllers.client;
 
 import com.kauan.LightBarbershop.dtos.client.ClientDto;
+import com.kauan.LightBarbershop.dtos.client.ClientPasswordResponseDto;
 import com.kauan.LightBarbershop.dtos.client.ClientResponseDto;
 import com.kauan.LightBarbershop.services.client.ClientService;
 import jakarta.validation.Valid;
@@ -40,5 +41,12 @@ public class ClientController {
         ClientResponseDto clientResponseDto = clientService.getClient(uuid);
 
         return ResponseEntity.ok(clientResponseDto);
+    }
+
+    @GetMapping("/{uuid}/get-password")
+    public ResponseEntity<ClientPasswordResponseDto> getPasswordClient(@PathVariable UUID uuid) {
+        ClientPasswordResponseDto clientPasswordResponseDto = clientService.getPasswordClient(uuid);
+
+        return ResponseEntity.ok(clientPasswordResponseDto);
     }
 }
