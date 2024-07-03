@@ -112,4 +112,9 @@ public class ClientService {
 
         return new ClientPasswordResponseDto(client.getPassword());
     }
+
+    @Transactional
+    public void deleteClient(UUID uuid) {
+        clientRepository.deleteById(uuid); // Deletando barber através do id
+    }
 }
