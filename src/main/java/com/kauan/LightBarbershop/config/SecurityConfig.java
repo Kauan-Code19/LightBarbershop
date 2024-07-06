@@ -40,6 +40,10 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/barber/{uuid}/get-password").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/barber/{uuid}").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/barber/{uuid}").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/client/{uuid}").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/client/{uuid}/get-password").hasRole("USER")
+                        .requestMatchers(HttpMethod.PUT, "/client/{uuid}").hasRole("USER")
+                        .requestMatchers(HttpMethod.DELETE, "/client/{uuid}").permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
